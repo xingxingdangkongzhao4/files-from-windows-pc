@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript"
+        src="http://static.360buyimg.com/pops/xstoreom/plugins/vue/vue.min.js?version=201904111604"></script>
+    <script type="text/javascript"
+        src="http://static.360buyimg.com/pops/xstoreom/plugins/vueResource/vue-resource.min.js?version=201904111604">
+    </script>
+    <script src="../pop-design/dist/fresh/fresh.min.js"></script>
+    <link rel="stylesheet" href="../pop-design/dist/fresh/styles/fresh.min.css">
+</head>
+
+<body>
+    <div id="quick-menu">
+        <p-quick-menu :list="list"></p-quick-menu>
+    </div>
+    <div id="widget">
+        <p-message-list :warningmessage="warningmessage" @func="getDeleteIndex"></p-message-list>
+        <p-blog-list :backlog="backlog"></p-blog-list>
+    </div>
+    <script>
+        var mx8vm = new Vue({
+            el: '#quick-menu',
+            data: function () {
+                return {
+                    list: [],
+                    config: ''
+                }
+            },
+            created: function () {
+                this.getUserPlugins()
+            },
+            methods: {
+                // 获取插件列表
+                getUserPlugins: function () {
+                    try {
+                        var self = this;
+                        Vue.http.options.credentials = true;
+                        Vue.http.get('http://erp.7fresh.com/roletemplate/rest/findUserPlugins', {
+                            _timeout: 4000
+                        }).then(function (response) {
+                            var res = JSON.parse(response.body)
+                            if (res.success) {
+                                if (res.data) {
+                                    localStorage.setItem('userPlugins', JSON.stringify(res
+                                        .data))
+                                    res.data.some(function (element) {
+                                        if (element.pluginCode ==
+                                            "FASTMENU_PLUGIN") {
+                                            var config = JSON.parse(element.config)
+                                                .join(',')
+                                            self.getMyMenuList(config)
+                                            return true
+                                        }
+                                    });
+                                }
+                            }
+                        }, function (err) {}).catch(function (e) {});
+                    } catch (err) {
+                        console.log(err.message)
+                    }
+                },
+                // 获取快捷菜单列表
+                getMyMenuList: function (codes) {
+                    try {
+                        var self = this;
+                        Vue.http.options.credentials = true;
+                        Vue.http.get('http://erp.7fresh.com/fastMenu/api/list?codes=' + codes, {
+                            _timeout: 4000
+                        }).then(function (response) {
+                            var res = JSON.parse(response.body);
+                            if (res.success) {
+                                if (res.data) {
+                                    self.list = res.data;
+                                }
+                            }
+                        }, function (err) {}).catch(function (e) {});
+                    } catch (err) {
+
+                    }
+                }
+            }
+        })
+
+        var mx7vm = new Vue({
+            el: '#widget',
+            data: function () {
+                return {
+                    // 轮询待办事项
+                    backlog: {},
+                    warningmessage: []
+                }
+            },
+            created() {
+                this.getPollingMessage();
+                this.getBackLog();
+            },
+            methods: {
+                // 轮询待办事项
+                getBackLog() {
+                    var self = this;
+                    self.checkBlog();
+                    setInterval(function () {
+                        self.checkBlog();
+                    }, 10000)
+                },
+                // 轮询待办
+                checkBlog() {
+                    try {
+                        var self = this;
+                        Vue.http.options.credentials = true;
+                        Vue.http.get('http://erp.7fresh.com/roletemplate/rest/pollingBackLog', {
+                            _timeout: 4000
+                        }).then(function (response) {
+                            var res = JSON.parse(response.body);
+                            if (res.success) {
+                                if (res.data) {
+                                    self.backlog = res.data;
+                                    console.log(self.backlog, 'backlog')
+                                }
+                            }
+                        }, function (err) {}).catch(function (e) {});
+                    } catch (err) {
+
+                    }
+                },
+                // 轮询消息提醒
+                getPollingMessage: function () {
+                    var self = this;
+                    self.pollingMessage();
+                    setInterval(function () {
+                        self.pollingMessage();
+                    }, 10000)
+                },
+                // 轮询消息
+                pollingMessage: function () {
+                    try {
+                        var self = this;
+                        Vue.http.options.credentials = true;
+                        Vue.http.get('http://erp.7fresh.com/roletemplate/rest/pollingMessage', {
+                            _timeout: 4000
+                        }).then(function (response) {
+                            var res = JSON.parse(response.body);
+                            if (res.success) {
+                                if (res.data) {
+                                    self.pollingMessageData(res.data);
+                                }
+                            }
+                        }, function (err) {}).catch(function (e) {});
+                    } catch (err) {
+
+                    }
+                },
+                // 轮询消息处理data
+                pollingMessageData: function (data) {
+                    var self = this;
+                    data.map(function (item) {
+                        // 只取前三条
+                        item.messageVos = item.messageVos.splice(0, 3);
+                        item.messageVos.map(function (element) {
+                            element.messageBirthday = self.timestampToTime(element
+                                .messageBirthday);
+                        })
+                    })
+                    self.warningmessage = data;
+                    console.log(self.warningmessage, 'warningmessage')
+
+                },
+                // 时间戳转日期
+                timestampToTime: function (timestamp) {
+                    const dateObj = new Date(+timestamp) // ps, 必须是数字类型，不能是字符串, +运算符把字符串转化为数字，更兼容
+                    const year = dateObj.getFullYear() // 获取年，
+                    const month = dateObj.getMonth() + 1 // 获取月，必须要加1，因为月份是从0开始计算的
+                    const date = dateObj.getDate() // 获取日，记得区分getDay()方法是获取星期几的。
+                    const hours = this.pad(dateObj.getHours()) // 获取时, pad函数用来补0
+                    const minutes = this.pad(dateObj.getMinutes()) // 获取分
+                    const seconds = this.pad(dateObj.getSeconds()) // 获取秒
+                    return year + '/' + month + '/' + date + ' ' + hours + ':' + minutes + ':' + seconds
+                },
+                pad: function (str) {
+                    return +str >= 10 ? str : '0' + str
+                },
+                getDeleteIndex: function (obj) {
+                    try {
+                        var self = this;
+                        Vue.http.options.credentials = true;
+                        Vue.http.get('http://erp.7fresh.com/roletemplate/rest/markMsgRead?messageType=' +
+                            obj.messageType, {
+                                _timeout: 4000
+                            }).then(function (response) {
+                            var res = JSON.parse(response.body);
+                            if (res.success) {
+                                self.warningMessage.splice(obj.index, 1);
+                            }
+                        }, function (err) {}).catch(function (e) {});
+                    } catch (err) {
+
+                    }
+                }
+            }
+        })
+    
+    
+    </script>
+</body>
+
+</html>

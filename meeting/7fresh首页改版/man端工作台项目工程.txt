@@ -1,0 +1,6 @@
+
+首页、消息插件、待办事项插件、快捷菜单插件
+项目：portalweb 分支： 76-f-plungin  git地址：git@git.jd.com:xstore-order/portalweb.git
+
+我的申请插件
+项目： xsotre-func-oa下面的 xstore-oa-web   分支： f-plugin  git地址：git@git.jd.com:joystore-func/joysotre-func-oa.git

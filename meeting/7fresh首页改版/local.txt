@@ -1,0 +1,61 @@
+# 7fresh本地
+# 最新开发全
+####################################################
+
+192.168.200.156 localtest.tower.jd.com
+127.0.0.1 venderm.sync.7fresh.com
+127.0.0.1 vender-p.7fresh.com
+127.0.0.1 venderm.man.7fresh.com
+#192.168.115.238 venderm.man.7fresh.com
+127.0.0.1 agreement.man.7fresh.com
+#127.0.0.1 apply-p.7fresh.com
+127.0.0.1 apply.man.7fresh.com
+127.0.0.1 apply.maschedulen.7fresh.com
+10.182.64.213 man.7fresh.com
+
+127.0.0.1 p.7fresh.com
+127.0.0.1 partner.7fresh.com
+#10.182.69.199 vender.schedule.7fresh.com
+127.0.0.1 vender.schedule.7fresh.com
+#oa
+#127.0.0.1 org.7fresh.com
+#127.0.0.1 oa-soa.7fresh.com
+#127.0.0.1 oa.7fresh.com wf.7fresh.com
+127.0.0.1 erp.7fresh.com
+
+10.182.47.152 oa.7fresh.com wf.7fresh.com
+10.182.33.228 oa-soa.7fresh.com
+10.182.35.167 sso.7fresh.com
+10.182.83.99 auth.7fresh.com
+10.182.83.100 auth-soa.7fresh.com
+
+#评价
+10.182.69.202 comment.man.7fresh.com
+#退款
+10.182.77.92 man.refund.7fresh.com
+#交易
+192.168.38.254 web-ticket.7fresh.com
+192.168.62.239 web-event.7fresh.com
+192.168.32.87 web-afs.7fresh.com
+
+
+192.168.153.120 usertools.jd.com
+
+#大区组件需要
+192.168.56.27 shop.7fresh.com
+#192.168.102.144 static.360buyimg.com
+#shop 端登录
+192.168.153.99 authcode.jd.com passport.jd.com
+192.168.153.99 ssa.7fresh.com sso.jd.com
+10.182.24.241 partner.7fresh.com
+## jdq
+192.168.144.108 TEST-JDQ-144108.bdp.jd.local
+192.168.144.109 TEST-JDQ-144109.bdp.jd.local
+192.168.144.110 TEST-JDQ-144110.bdp.jd.local
+192.168.144.111 TEST-JDQ-144111.bdp.jd.local
+192.168.144.112 TEST-JDQ-144112.bdp.jd.local
+# 
+192.168.151.74 redis.local 
+0.0.0.0 account.jetbrains.com
+192.168.150.121 i.jsf.jd.com  #测试index服务地址
+192.168.150.61 cfs.cache.jd.local cfs.jim.jd.local

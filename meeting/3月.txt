@@ -1,0 +1,16 @@
+1、需求清单，发邮件
+2、popdesign 升级优化
+3、代码辅助平台
+4、RN，Flutter
+5、Electron，CS
+6、项目跑不起来的时候，删除node_modules，重新cnpm install试试
+7、prettier 格式化代码
+8、husky
+9、shift+Alt+F 格式化代码
+10、vscode设置保存的时候格式化代码
+11、git add前 prettier src/**/*.js eslint git add
+12、花瓶 反向代理
+13、
+待办：
+升级vue到2.6
+升级webpack到3.0
